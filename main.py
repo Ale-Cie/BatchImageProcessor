@@ -26,12 +26,15 @@ scheduled_tasks = ttk.LabelFrame(root)
 mainframe = ttk.Notebook(display)
 extensions_frame = classes.ExtensionsFrame(mainframe)
 filters_frame = classes.FiltersFrame(mainframe)
+welcome_screen = ttk.Frame(display)
 
 
 # Widgets
 input_img = PhotoImage(file="./resources/images/input_button.png").subsample(2, 2)
 output_img = PhotoImage(file="./resources/images/output_button.png").subsample(2, 2)
 process_img = PhotoImage(file="./resources/images/process_button.png").subsample(2, 2)
+begin_img = PhotoImage(file="./resources/images/begin_button.png").subsample(1, 1)
+welcome_banner = PhotoImage(file="./resources/images/bip_banner.png").subsample(3, 3)
 
 input_selector = Button(controls, image= input_img, command=lambda: input_path.set(filedialog.askdirectory()))
 output_folder = Button(controls, image= output_img, command=lambda: funcs.open_directory("output_folder"))
@@ -42,6 +45,9 @@ selected_filter = ttk.Label(scheduled_tasks, text= "None",)
 process_button = Button(scheduled_tasks, image= process_img)
 spacer = ttk.Label(root)
 progress_bar = ttk.Progressbar(root)
+banner_label = ttk.Label(welcome_screen, image= welcome_banner)
+welcome_spacer = ttk.Label(welcome_screen)
+begin_button = Button(welcome_screen, image= begin_img, command=lambda: welcome_screen.destroy())
 
 # Setup
 display.grid(column= 1, row= 0, sticky= (N,S,W))
@@ -50,6 +56,7 @@ scheduled_tasks.grid(column= 2, row= 0, sticky= (N,S,E,W))
 mainframe.grid(column= 0, row=0, sticky= (N,S,E,W))
 mainframe.add(extensions_frame, text= "Change Extensions")
 mainframe.add(filters_frame, text= "Apply Filters")
+welcome_screen.grid(column= 0, row= 0, sticky= (N,S,E,W))
 input_selector.grid(column= 1, row= 0, sticky= (S,E,W))
 output_folder.grid(column= 1, row= 1, sticky= (N,E,W))
 extension_label.grid(column=0, row= 0, sticky= (N,S,E,W))
@@ -59,6 +66,9 @@ selected_filter.grid(column= 0, row= 3, sticky= (N,S,E,W))
 process_button.grid(column= 0, row= 4)
 spacer.grid(column= 0, row= 1, columnspan= 3)
 progress_bar.grid(column= 0, row= 2, sticky= (N,S,E,W), columnspan= 3)
+banner_label.grid(column= 0, row= 0)
+welcome_spacer.grid(column= 0, row= 1, rowspan= 3)
+begin_button.grid(column= 0, row= 4, sticky= (S))
 
 
 display.columnconfigure(0, weight=3)
@@ -67,6 +77,7 @@ display.rowconfigure(0, weight= 3)
 controls.columnconfigure(0, weight= 3)
 controls.rowconfigure(0, weight= 3)
 controls.rowconfigure(1, weight= 3)
+welcome_screen.columnconfigure(0, weight= 3)
 
 for child in root.winfo_children():
     child.grid_configure(padx= 5, pady= 5)
@@ -81,7 +92,10 @@ progress_bar.grid_configure(padx= 20, pady= 0)
 
 for child in scheduled_tasks.winfo_children():
     child.grid_configure(pady= 20)
-
+for child in welcome_screen.winfo_children():
+    child.grid_anchor("center")
+    child.grid_configure(padx= 20, pady= 10)
+welcome_spacer.grid_configure(pady= 100)
 
 root.minsize(width=850, height=560)
 root.maxsize(width=850, height=560)
