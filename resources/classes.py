@@ -5,6 +5,8 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from pyautogui import size
 
+from resources import funcs
+
 class ExtensionsFrame(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
@@ -12,7 +14,7 @@ class ExtensionsFrame(ttk.Frame):
         self.extension = StringVar()
         self.extension.set("None")
 
-        label_text = "If you need a uniform extension for a collection of images, pick\none of the file formats below and press 'Schedule Tasks'.\nWhen you later on click 'Process Images' to apply changes."
+        label_text = "If you need a uniform extension for a collection of images, pick\none of the file formats below and press 'Schedule Tasks'.\nWhen you later on click 'Process Images' changes will apply."
         self.banner = PhotoImage(file= "./resources/images/extension_manager.png")
         self.clear = PhotoImage(file= "./resources/images/clear_button.png").subsample(2, 2)
         self.banner_frame = ttk.Frame(self)
@@ -21,7 +23,7 @@ class ExtensionsFrame(ttk.Frame):
         self.basic_checkboxes_frame = ttk.Frame(self)
         self.other_checkboxes_frame = ttk.Frame(self)
         self.schedule_img = PhotoImage(file="./resources/images/schedule_task.png").subsample(2, 2)
-        self.schedule_button = Button(self, image= self.schedule_img, text="")
+        self.schedule_button = Button(self, image= self.schedule_img)
         self.clear_button = Button(self, image= self.clear, command=lambda: self.extension.set("None"))
 
         self.basic_checkboxes_creator()
@@ -97,7 +99,7 @@ class ExtensionsFrame(ttk.Frame):
     def frame_setup(self):
         self.banner_frame.grid(column= 0, row= 0, columnspan= 2)
         self.image_label.grid(column= 0, row= 0)
-        self.description_frame.grid(column= 0, row= 1, sticky= (N,S,E,W), columnspan= 2)
+        self.description_frame.grid(column= 0, row= 1, columnspan= 2)
         self.basic_checkboxes_frame.grid(column= 0, row= 2, sticky= (N,S,E,W))
         self.other_checkboxes_frame.grid(column= 1, row= 2, sticky= (N,S,E,W))
         self.schedule_button.grid(column= 1, row= 3)
@@ -117,14 +119,14 @@ class FiltersFrame(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
         self.filter = StringVar()
-        label_text = "This is work in progres.\nCome back later.\nEnjoy the rest of the view"
+        label_text = "If you want to apply a filter to an entire collection of images, pick\none of the filters listed below and press 'Schedule Tasks'.\nWhen you later on click 'Process Images' changes will apply."
         self.banner = PhotoImage(file= "./resources/images/filters_manager.png")
-        self.preview = PhotoImage(file= "./resources/images/preview.png").subsample(3, 3)
+        self.preview = PhotoImage(file= "./resources/images/filters/preview.png").subsample(3, 3)
         self.schedule = PhotoImage(file= "./resources/images/schedule_task.png").subsample(2, 2)
         self.clear = PhotoImage(file= "./resources/images/clear_button.png").subsample(2, 2)
         self.banner_frame = ttk.Frame(self)
         self.image_label = ttk.Label(self.banner_frame, image=self.banner)
-        self.description_label = ttk.Label(self, text= label_text)
+        self.description_label = ttk.Label(self, text= label_text, justify="center")
         self.checkboxes_frame = ttk.Frame(self)
         self.preview_frame = ttk.Frame(self)
         self.preview_label = ttk.Label(self.preview_frame, image=self.preview)
@@ -172,11 +174,93 @@ class FiltersFrame(ttk.Frame):
     def frame_setup(self):
         self.banner_frame.grid(column=0, row=0, columnspan= 2)
         self.image_label.grid(column= 0, row= 0)
-        self.description_label.grid(column=0, row= 1, columnspan= 2, sticky= (N,S,E,W))
+        self.description_label.grid(column=0, row= 1, columnspan= 2)
         self.checkboxes_frame.grid(column=0, row=2)
         self.preview_frame.grid(column=1, row=2)
         self.preview_label.grid(column= 0, row= 0)
         self.schedule_button.grid(column=1, row= 3, rowspan= 2)
         self.clear_button.grid(column=0, row= 3)
 
+        self.columnconfigure(0, weight= 3)
+        self.columnconfigure(1, weight= 3)
+        self.rowconfigure(0, weight=3)
+
+class ResizingFrame(ttk.Frame):
+    def __init__(self, parent):
+        ttk.Frame.__init__(self, parent)
+        self.proportions = StringVar()
+        
+        self.proportions.set("free")
+        self.banner = PhotoImage(file="./resources/images/resizing_manager.png")
+        self.schedule = PhotoImage(file= "./resources/images/schedule_task.png").subsample(2, 2)
+        self.clear = PhotoImage(file= "./resources/images/clear_button.png").subsample(2, 2)
+        self.banner_frame = ttk.Frame(self)
+        self.banner_label = ttk.Label(self.banner_frame, image= self.banner)
+        description_label = "If you want to resize an entire collection of images, put the\ndimensions below, select proportions and press 'Schedule Tasks'.\nWhen you later on click 'Process Images' changes will apply."
+        self.description_label = ttk.Label(self, text= description_label, justify="center")
+        self.values_frame = ttk.Frame(self)
+        self.proportions_frame = ttk.Frame(self, width= 20)
+        self.error_text = ""
+        self.error_label = ttk.Label(self, text= self.error_text)
+        self.schedule_button = Button(self, image= self.schedule)
+        self.width = StringVar()
+        self.height = StringVar()
+        self.clear_button = Button(self, image= self.clear, command=lambda: funcs.clear_dimensions(self.width, self.height, self.proportions))
+
+        self.resizing_setup()
+        self.proportions_setup()
+        self.frame_setup()
+
+        self.columnconfigure(0, weight= 3)
+        self.columnconfigure(1, weight= 3)
+
+        for child in self.winfo_children():
+            child.grid_configure(padx= 5, pady= 5)
+
+    def resizing_setup(self):
+        
+        self.resizing_label = ttk.Label(self.values_frame, text="Set Width & Height", font= "TkSmallCaptionFont")
+        self.width_label = ttk.Label(self.values_frame, text= "Width:")
+        self.by_label = ttk.Label(self.values_frame, text="X", justify="center")
+        self.height_label = ttk.Label(self.values_frame, text= "Height:")
+        self.width_field = ttk.Entry(self.values_frame, textvariable=self.width, width= 5)
+        self.height_field = ttk.Entry(self.values_frame, textvariable=self.height, width= 5)
+
+        self.resizing_label.grid(column=0, row=0, columnspan= 2, sticky= (N,S,E,W))
+        self.width_label.grid(column=0, row= 1)
+        self.width_field.grid(column= 1, row= 1)
+        self.by_label.grid(column= 0, row= 2, columnspan= 2)
+        self.height_label.grid(column= 0, row= 3)
+        self.height_field.grid(column= 1, row= 3)
+
+
+    def proportions_setup(self):
+        self.proportions_label = ttk.Label(self.proportions_frame, text= "Select Proportions", font="TkSmallCaptionFont")
+        freeform_box = ttk.Radiobutton(self.proportions_frame, text="Free", variable= self.proportions, value= "free" )
+        one_by_one_box = ttk.Radiobutton(self.proportions_frame, text= " 1:1 ", variable= self.proportions, value= "1:1")
+        three_by_four_box = ttk.Radiobutton(self.proportions_frame, text= " 3:4 ", variable= self.proportions, value="3:4")
+        four_by_five_box = ttk.Radiobutton(self.proportions_frame, text= " 4:5 ", variable= self.proportions, value= "4:5")
+        sixteen_by_nine = ttk.Radiobutton(self.proportions_frame, text= " 16:9", variable= self.proportions, value= "16:9")
+
+        self.proportions_label.grid(column= 0, row= 0)
+        freeform_box.grid(column= 0, row= 1)
+        one_by_one_box.grid(column= 0, row= 2)
+        three_by_four_box.grid(column= 0, row= 3)
+        four_by_five_box.grid(column= 0, row= 4)
+        sixteen_by_nine.grid(column= 0, row= 5)
+        
+
+    def frame_setup(self):
+        self.banner_frame.grid(column= 0, row= 0, columnspan= 2)
+        self.banner_label.grid(column= 0, row= 0)
+        self.description_label.grid(column=0, row= 1, columnspan= 2)
+        self.values_frame.grid(column=0, row= 2)
+        self.proportions_frame.grid(column= 1, row= 2, )
+        self.clear_button.grid(column= 0, row= 3)
+        self.schedule_button.grid(column= 1, row= 3)
+        self.error_label.grid(column= 0, row= 4, columnspan= 2)
        
+        self.columnconfigure(0, weight= 3)
+        self.columnconfigure(1, weight= 3)
+        self.rowconfigure(0, weight=3)
+        

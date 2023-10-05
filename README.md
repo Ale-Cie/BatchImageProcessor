@@ -25,6 +25,10 @@ Currently (v. 0.1.0), the code in this repository is an empty husk - it just loo
 
 ## What's already happened?
 
+<i>-- 05.10.2023 --</i>
+
+A tiny little update to version 0.1.1 in which I added a third (but second in order) tab to the main screen. It will allow the user to handle resizing files either freely or by using set width to height ratio. Other than that no changes in functionality. Some new images were added to the resources. They will probably be used in the future, however I will see about that and might change them at some point.
+
 <i>-- 25.09.2023 --</i>
 
 The repository was created, uncomplete 0.1.0 version of the frontend was uploaded, `README.md` was created and updated. From this point onward any changes will get directly commited to this repository and then descirbed here and on my portfolio page.
