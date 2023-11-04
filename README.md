@@ -21,9 +21,13 @@ At long last I upload a project that sort of started my interest in programmig. 
 
 Answering the question from the introduction - what scheduled changes? For now you can quickly change extensions, resize the images and apply filters. Why may you need it? Well if you've read so far either a use came to your mind by now. Myself, I found it usefull while preparing images for a neural network I wanted to test. This app made it quite easy to resize the images, apply filters to mix up the data etc.
 
-Currently (v. 0.1.0), the code in this repository is an empty husk - it just looks like I want the final version to appear on the screen. It's missing the "Resizing" tab, and the code in the `outdated_main.py` has nothing to do with the actual app. I will adapt the code I used to fit this GUI, but that will come at a later time.
+Currently (v. 0.2.0), the app is fully functional, but I have not made any efforts to optimize it in any way. You can now resize, apply filters, change extensions all with the help of an (more or less) intuitive GUI. Some changes are bound to the app happen in future iterations, but for now this is BIP.
 
 ## What's already happened?
+
+<i>-- 03.11.2023 --</i>
+
+A rather big update this time! Say hello to BatchImageProcessor v. 0.2.0 - not just a GUI anymore, it comes with functionality now! From this update Mac users can feed batches of images to BIP, change their extensions en masse, resize them to either a freeform size or a selected width:height ratio and apply one of ten different filters. A `config.ini` file gets created upon booting up the app, which for now serves as just a way to either display or not a welcome screen at startup of the app. Feel free to play around with the app, it should work as intended!
 
 <i>-- 05.10.2023 --</i>
 
