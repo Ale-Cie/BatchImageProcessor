@@ -46,10 +46,6 @@ output_img = PhotoImage(
     file="./resources/images/output_button.png").subsample(2, 2)
 process_img = PhotoImage(
     file="./resources/images/process_button.png").subsample(2, 2)
-# begin_img = PhotoImage(
-#     file="./resources/images/begin_button.png").subsample(1, 1)
-# welcome_banner = PhotoImage(
-#     file="./resources/images/bip_banner.png").subsample(1, 1)
 default_input = Button(controls, image=default_input_img,
                        command=lambda: funcs.open_directory("input_folder", input_path, processed_files_frame))
 input_selector = Button(controls, image=input_img,
@@ -61,11 +57,6 @@ resizing_label = ttk.Label(scheduled_tasks, text="Resizing Values:")
 filter_label = ttk.Label(scheduled_tasks, text="Selected Filter: ")
 process_button = Button(scheduled_tasks, image=process_img, command=lambda: funcs.process_images(
     input_path.get(), output_path.get(), selected_extension["text"], selected_filter["text"], selected_resizing["text"], processed_files_frame))
-# spacer = ttk.Label(root)
-# banner_label = ttk.Label(welcome_screen, image=welcome_banner)
-# welcome_spacer = ttk.Label(welcome_screen)
-# begin_button = Button(welcome_screen, image=begin_img,
-#                       command=lambda: welcome_screen.destroy())
 
 # Setup
 display.grid(column=1, row=0, sticky=(N, S, W))
@@ -75,9 +66,9 @@ mainframe.grid(column=0, row=0, sticky=(N, S, E, W))
 mainframe.add(extensions_frame, text="Change Extensions")
 mainframe.add(resizing_frame, text="Resize Images")
 mainframe.add(filters_frame, text="Apply Filters")
-default_input.grid(column=1, row=0)
-input_selector.grid(column=1, row=1, sticky=(S, E, W))
-output_folder.grid(column=1, row=2, sticky=(N, E, W))
+default_input.grid(column=1, row=0, sticky=(E, W))
+input_selector.grid(column=1, row=1, sticky=(E, W))
+output_folder.grid(column=1, row=2, sticky=(E, W))
 extension_label.grid(column=0, row=0, sticky=(N, S, E, W))
 selected_extension.grid(column=0, row=1, sticky=(N, S, E, W))
 resizing_label.grid(column=0, row=2, sticky=(N, S, E, W))
@@ -85,11 +76,7 @@ selected_resizing.grid(column=0, row=3, sticky=(N, S, E, W))
 filter_label.grid(column=0, row=4, sticky=(N, S, E, W))
 selected_filter.grid(column=0, row=5, sticky=(N, S, E, W))
 process_button.grid(column=0, row=6)
-# spacer.grid(column=0, row=1, columnspan=3)
 processed_files_frame.grid(column=0, row=1, sticky=(N, S, E, W), columnspan=3)
-# banner_label.grid(column=0, row=0)
-# welcome_spacer.grid(column=0, row=1, rowspan=3)
-# begin_button.grid(column=0, row=4, sticky=(S))
 
 
 display.columnconfigure(0, weight=3)
